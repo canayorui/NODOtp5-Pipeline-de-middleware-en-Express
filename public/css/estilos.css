@@ -1,0 +1,88 @@
+/* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  color: #333;
+}
+
+header {
+  background: #004080;
+  color: white;
+  padding: 1rem;
+}
+
+header h1 {
+  margin: 0;
+}
+
+nav a {
+  color: white;
+  margin-right: 1rem;
+  text-decoration: none;
+}
+
+nav a:hover,
+nav a:focus {
+  text-decoration: underline;
+}
+
+main {
+  padding: 1rem;
+  background: white;
+  min-height: 70vh;
+}
+
+footer {
+  background: #eee;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Formularios */
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+
+label {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+input, select, button {
+  padding: 0.5rem;
+  margin-top: 0.2rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  margin-top: 1rem;
+  background: #004080;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus {
+  background: #0066cc;
+}
+
+/* Accesibilidad */
+:focus {
+  outline: 2px solid #ff6600;
+  outline-offset: 2px;
+}
+
+[role="alert"] {
+  background: #ffe6e6;
+  border: 1px solid red;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  color: red;
+}
