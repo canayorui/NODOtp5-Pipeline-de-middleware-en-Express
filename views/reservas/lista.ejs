@@ -1,0 +1,15 @@
+<h2>Listado de reservas</h2>
+
+<% if (reservas.length === 0) { %>
+  <p>No hay reservas registradas.</p>
+<% } else { %>
+  <ul>
+    <% reservas.forEach(r => { %>
+      <li>
+        <a href="/reservas/<%= r.id %>">
+          <%= r.estudiante %> — <%= r.sala %> — <%= r.fecha %> — <%= r.turno %>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
