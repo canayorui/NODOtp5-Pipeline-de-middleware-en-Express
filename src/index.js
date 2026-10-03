@@ -70,34 +70,45 @@ reservasRouter.get("/", (req, res) => {
 });
 
 reservasRouter.get("/nueva", (req, res) => {
-  res.render("reservas/nueva", { titulo: "Nueva reserva" });
+  res.render("reservas/nueva", {
+    titulo: "Nueva reserva",
+    error: null,
+    valores: {}
+  });
 });
 
 reservasRouter.get("/:id", (req, res) => {
   const reserva = reservas.find(r => r.id == req.params.id);
-  if (!reserva) return res.status(404).render("no-encontrado", { titulo: "No encontrado" });
+  if (!reserva) return res.status(404).render("no_encontrados", { titulo: "No encontrado" });
   res.render("reservas/detalle", { titulo: "Detalle", reserva });
 });
 
 // Validación
 function validarReserva(req, res, next) {
-  let { estudiante, email, sala, fecha, turno, personas } = req.body;
-  estudiante = estudiante?.trim();
-  email = email?.trim();
-  sala = sala?.trim();
-  fecha = fecha?.trim();
-  turno = turno?.trim();
-  personas = Number(personas);
+  const body = req.body || {};
+  const normalizar = valor => typeof valor === "string" ? valor.trim() : "";
+  const estudiante = normalizar(body.estudiante);
+  const email = normalizar(body.email);
+  const sala = normalizar(body.sala);
+  const fecha = normalizar(body.fecha);
+  const turno = normalizar(body.turno);
+  const personasTexto = normalizar(body.personas);
+  const personas = Number(personasTexto);
 
   const salasPermitidas = ["Sala Norte", "Sala Sur", "Sala Multimedia"];
   const turnosPermitidos = ["Mañana", "Tarde", "Noche"];
+  const valores = { estudiante, email, sala, fecha, turno, personas: personasTexto };
+  const fechaValida = /^\d{4}-\d{2}-\d{2}$/.test(fecha) &&
+    !Number.isNaN(Date.parse(fecha)) &&
+    new Date(`${fecha}T00:00:00Z`).toISOString().slice(0, 10) === fecha;
 
   if (!estudiante || !email.includes("@") || !salasPermitidas.includes(sala) ||
-      !turnosPermitidos.includes(turno) || personas < 1 || personas > 6) {
+      !fechaValida || !turnosPermitidos.includes(turno) ||
+      !Number.isInteger(personas) || personas < 1 || personas > 6) {
     return res.status(400).render("reservas/nueva", {
       titulo: "Nueva reserva",
       error: "Datos inválidos",
-      valores: req.body
+      valores
     });
   }
 
@@ -117,7 +128,7 @@ app.use("/reservas", reservasRouter);
 
 // Middleware final 404
 app.use((req, res) => {
-  res.status(404).render("no-encontrado", { titulo: "No encontrado" });
+  res.status(404).render("no_encontrados", { titulo: "No encontrado" });
 });
 
 app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
