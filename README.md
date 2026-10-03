@@ -45,19 +45,10 @@ El ID se asigna antes de medir la solicitud. La duración se registra al emitir 
 
 ```mermaid
 flowchart TD
-    A[Solicitud HTTP] --> B[Morgan: registro de acceso]
-    B --> C[Identificar solicitud: asignar solicitudId]
-    C --> D[Medir duración: escuchar finish]
-    D --> E[express-ejs-layouts]
-    E --> F[Archivos estáticos]
-    F --> G[Parsear formularios URL-encoded]
-    G --> H[Parsear JSON]
-    H --> I{Ruta coincidente}
-    I -->|Sí| J[Router o controlador]
-    I -->|No| K[Renderizar página 404]
-    J --> L[Respuesta]
-    K --> L
-    L --> M[finish: registrar estado y duración]
+    A[Solicitud] --> B[Middleware global]
+    B --> C[Ruta o página 404]
+    C --> D[Respuesta]
+    D --> E[Registrar duración al terminar]
 ```
 
 ## Flujo de alta de una reserva
@@ -66,13 +57,11 @@ Los campos se normalizan antes de validarse. Si hay errores, se responde con est
 
 ```mermaid
 flowchart TD
-    A[GET /reservas/nueva] --> B[Renderizar formulario]
-    B --> C[POST /reservas]
-    C --> D[Normalizar campos]
-    D --> E{Campos válidos}
-    E -->|No| F[Renderizar formulario con estado 400 y errores]
-    E -->|Sí| G[Crear reserva en memoria]
-    G --> H[Redirigir a /reservas]
+    A[Enviar formulario] --> B[Validar datos]
+    B --> C{Datos válidos}
+    C -->|No| D[Mostrar errores]
+    C -->|Sí| E[Guardar reserva]
+    E --> F[Volver al listado]
 ```
 
 ## Validaciones del formulario
